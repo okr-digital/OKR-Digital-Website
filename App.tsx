@@ -12,8 +12,13 @@ import CaseStudy from './components/CaseStudy';
 import FAQ from './components/FAQ';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
+import Impressum from './components/Impressum';
+import Datenschutz from './components/Datenschutz';
+
+type ViewState = 'home' | 'impressum' | 'datenschutz';
 
 const App: React.FC = () => {
+  const [currentView, setCurrentView] = useState<ViewState>('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -24,6 +29,13 @@ const App: React.FC = () => {
 
   const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMenu = () => setIsMobileMenuOpen(false);
+
+  // Simple navigation handler that resets scroll to top
+  const navigateTo = (view: ViewState) => {
+    setCurrentView(view);
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const navLinks = [
     { href: "#services", label: "Leistungen" },
@@ -45,21 +57,40 @@ const App: React.FC = () => {
         aria-label="Main Navigation"
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
-          <a href="#" onClick={closeMenu} className="text-xl font-extrabold tracking-tight text-brand-navy z-50 relative">
+          <a 
+            href="#" 
+            onClick={(e) => { e.preventDefault(); navigateTo('home'); }} 
+            className="text-xl font-extrabold tracking-tight text-brand-navy z-50 relative"
+          >
             OKR<span className="text-brand-primary">.digital</span>
           </a>
           
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <div className="flex gap-6 text-sm font-medium text-brand-gray">
-              {navLinks.map((link) => (
+              {currentView === 'home' && navLinks.map((link) => (
                 <a key={link.href} href={link.href} className="hover:text-brand-primary transition-colors">
                   {link.label}
                 </a>
               ))}
+              {currentView !== 'home' && (
+                <button onClick={() => navigateTo('home')} className="hover:text-brand-primary transition-colors">
+                  Zurück zur Startseite
+                </button>
+              )}
             </div>
             <a 
               href="#contact"
+              onClick={(e) => { 
+                if (currentView !== 'home') {
+                   e.preventDefault();
+                   navigateTo('home');
+                   setTimeout(() => {
+                     const el = document.getElementById('contact');
+                     el?.scrollIntoView({ behavior: 'smooth' });
+                   }, 100);
+                }
+              }}
               className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all inline-block ${
                 isScrolled
                   ? 'bg-brand-primary text-white hover:bg-blue-700 shadow-md'
@@ -88,7 +119,7 @@ const App: React.FC = () => {
                 exit={{ opacity: 0, y: -20 }}
                 className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
               >
-                {navLinks.map((link) => (
+                {currentView === 'home' ? navLinks.map((link) => (
                   <a 
                     key={link.href} 
                     href={link.href} 
@@ -97,10 +128,26 @@ const App: React.FC = () => {
                   >
                     {link.label}
                   </a>
-                ))}
+                )) : (
+                  <button 
+                    onClick={() => navigateTo('home')}
+                    className="text-2xl font-bold text-brand-navy hover:text-brand-primary"
+                  >
+                    Startseite
+                  </button>
+                )}
                 <a 
                   href="#contact" 
-                  onClick={closeMenu}
+                  onClick={() => {
+                    if (currentView !== 'home') {
+                      navigateTo('home');
+                      setTimeout(() => {
+                        document.getElementById('contact')?.scrollIntoView();
+                      }, 100);
+                    } else {
+                      closeMenu();
+                    }
+                  }}
                   className="px-8 py-3 bg-brand-primary text-white text-lg font-bold rounded-lg shadow-lg"
                 >
                   Lass uns sprechen
@@ -112,18 +159,28 @@ const App: React.FC = () => {
       </nav>
 
       <main className="flex-grow">
-        <Hero />
-        <div id="target-group"><TargetGroup /></div>
-        <div id="services"><Services /></div>
-        <ChannelsSection />
-        <div id="process"><ProcessSection /></div>
-        <div id="performance"><PerformanceSection /></div>
-        <div id="proof"><CaseStudy /></div>
-        <div id="faq"><FAQ /></div>
-        <div id="contact"><ContactForm /></div>
+        {currentView === 'home' && (
+          <>
+            <Hero />
+            <div id="target-group"><TargetGroup /></div>
+            <div id="services"><Services /></div>
+            <ChannelsSection />
+            <div id="process"><ProcessSection /></div>
+            <div id="performance"><PerformanceSection /></div>
+            <div id="proof"><CaseStudy /></div>
+            <div id="faq"><FAQ /></div>
+            <div id="contact"><ContactForm /></div>
+          </>
+        )}
+        {currentView === 'impressum' && (
+          <Impressum onBack={() => navigateTo('home')} />
+        )}
+        {currentView === 'datenschutz' && (
+          <Datenschutz onBack={() => navigateTo('home')} />
+        )}
       </main>
 
-      <Footer />
+      <Footer onNavigate={navigateTo} />
     </div>
   );
 };

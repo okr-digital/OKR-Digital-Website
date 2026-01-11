@@ -1,7 +1,11 @@
 import React from 'react';
 import { Linkedin, Mail } from 'lucide-react';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigate: (view: string) => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer className="bg-slate-50 py-12 border-t border-slate-200 text-brand-navy">
       <div className="container mx-auto px-6">
@@ -32,8 +36,18 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="flex gap-6 text-sm text-brand-gray">
-            <a href="#" className="hover:text-brand-navy transition-colors">Impressum</a>
-            <a href="#" className="hover:text-brand-navy transition-colors">Datenschutz</a>
+            <button 
+              onClick={() => onNavigate('impressum')} 
+              className="hover:text-brand-navy transition-colors"
+            >
+              Impressum
+            </button>
+            <button 
+              onClick={() => onNavigate('datenschutz')}
+              className="hover:text-brand-navy transition-colors"
+            >
+              Datenschutz
+            </button>
           </div>
         </div>
         
