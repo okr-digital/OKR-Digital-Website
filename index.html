@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OKR.digital | Growth Partner für SaaS & Finanzdienstleister</title>
+    <meta name="description" content="Skaliere dein B2B SaaS oder Finanz-Business ohne Fixkosten. 0€ Setup, 0€ Retainer – 100% Performance-Vergütung." />
+    
+    <!-- SEO / Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="OKR.digital | 100% Performance Marketing" />
+    <meta property="og:description" content="Kein Retainer, kein Setup. Ich werde nur am Erfolg beteiligt." />
+    <meta property="og:image" content="https://okr-digital.at/og-image.jpg" />
+    
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Manrope', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                navy: '#0f172a',
+                primary: '#2563eb',
+                light: '#f8fafc',
+                gray: '#64748b',
+                surface: '#ffffff'
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Global Styles -->
+    <style>
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 100px; 
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+
+    <!-- Import Map: FIXED to force single React version -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4?deps=react@18.2.0,react-dom@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+    
+    <!-- Babel Standalone: Um JSX im Browser zu übersetzen -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- MAIN APP SCRIPT -->
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect } from 'react';
+        import ReactDOM from 'react-dom/client';
+        import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+        import { 
+            ArrowRight, CheckCircle2, TrendingUp, Wallet, 
+            Server, Building2, XCircle, ArrowRightCircle,
+            Compass, Target, BarChart2, MousePointerClick,
+            PieChart, Scale, User, ChevronDown, ChevronUp,
+            Linkedin, Facebook, Youtube, Search, Smartphone, Layers,
+            Mail, CheckCircle, Menu, X
+        } from 'lucide-react';
+
+        // Suppress benign ResizeObserver errors often caused by extensions or third-party libraries (like HubSpot or Framer Motion)
+        const RO_ERROR_MESSAGES = [
+          'ResizeObserver loop completed with undelivered notifications.',
+          'ResizeObserver loop limit exceeded'
+        ];
+
+        window.addEventListener('error', (e) => {
+          if (RO_ERROR_MESSAGES.includes(e.message)) {
+            e.stopImmediatePropagation();
+          }
+        });
+
+        // --- COMPONENTS START ---
+
+        // 1. HERO COMPONENT
+        const Hero = () => {
+          return (
+            <section className="relative pt-36 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-brand-light">
+              <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-50 to-transparent pointer-events-none" />
+              <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />
+
+              <div className="container mx-auto px-4 sm:px-6 relative z-10">
+                <div className="max-w-4xl mx-auto text-center">
+                  
+                  <div className="bg-white/60 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none border border-brand-primary/10 md:border-none rounded-3xl p-6 md:p-0 shadow-xl shadow-blue-900/5 md:shadow-none">
+                    
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 border border-blue-200 text-brand-primary text-xs font-semibold uppercase tracking-wider mb-6 md:mb-8"
+                    >
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
+                      </span>
+                      Dein Growth Partner für SaaS & Finanzdienstleister
+                    </motion.div>
+
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.1 }}
+                      className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold text-brand-navy leading-tight md:leading-[1.15] mb-6"
+                    >
+                      Wachstum, das sich <br className="hidden md:block"/>
+                      <span className="text-brand-primary">rechnet.</span>
+                    </motion.h1>
+
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className="text-lg md:text-xl text-brand-gray max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed"
+                    >
+                      Ich helfe SaaS-Companies und Dienstleistern beim Skalieren. 
+                      <span className="font-semibold text-brand-navy"> Kein Setup. Kein Retainer. </span> 
+                      Ich werde zu 100% am Erfolg beteiligt. Wenn du nicht wächst, verdiene ich nichts.
+                    </motion.p>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.3 }}
+                      className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10 md:mb-16"
+                    >
+                      <a
+                        href="#contact"
+                        className="w-full sm:w-auto px-8 py-4 bg-brand-primary hover:bg-blue-700 text-white rounded-lg font-bold text-lg transition-all shadow-xl shadow-blue-200 hover:shadow-blue-300 flex items-center justify-center gap-2"
+                      >
+                        Lass uns sprechen
+                        <ArrowRight className="w-5 h-5" />
+                      </a>
+                      <a
+                        href="#process"
+                        className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-brand-navy border border-slate-200 rounded-lg font-bold text-lg transition-colors flex items-center justify-center"
+                      >
+                        So läuft's ab
+                      </a>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.8, delay: 0.5 }}
+                      className="border-t border-slate-200 pt-6 md:pt-8 flex flex-wrap justify-center gap-x-6 gap-y-3 md:gap-12 text-sm md:text-base font-medium text-brand-navy/80"
+                    >
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-brand-primary" />
+                        <span>Ergebnisorientiert</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Wallet className="w-4 h-4 md:w-5 md:h-5 text-brand-primary" />
+                        <span>0€ Fixkosten</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-brand-primary" />
+                        <span>100% Performance</span>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  <motion.div
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.8, delay: 0.7 }}
+                     className="mt-6 inline-block bg-green-50 text-green-800 text-sm px-4 py-2 rounded-full font-semibold border border-green-200"
+                  >
+                    🚀 Case Study: +40% Umsatz in 6 Monaten
+                  </motion.div>
+
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 2. TARGET GROUP
+        const TargetGroup = () => {
+          return (
+            <section className="py-24 bg-white">
+              <div className="container mx-auto px-6">
+                <div className="text-center mb-16">
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-brand-navy mb-4">
+                    Für wen das hier perfekt passt
+                  </h2>
+                  <p className="text-brand-gray max-w-2xl mx-auto">
+                    Mein Modell rockt am besten, wenn du schon Product-Market-Fit hast und jetzt skalieren willst.
+                  </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                  {/* SaaS Block */}
+                  <div className="p-8 rounded-2xl bg-brand-light border border-slate-200">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-brand-primary">
+                        <Server className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-xl font-bold text-brand-navy">SaaS Startups & Scaleups</h3>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                      <p className="font-semibold text-brand-navy border-b border-slate-200 pb-2">Deine aktuellen Pains:</p>
+                      <ul className="space-y-2">
+                        <li className="flex items-start gap-2 text-brand-gray text-sm">
+                          <XCircle className="w-4 h-4 text-red-400 mt-1 shrink-0" />
+                          Deine Pipeline ist ne Wundertüte – total unplanbar.
+                        </li>
+                        <li className="flex items-start gap-2 text-brand-gray text-sm">
+                          <XCircle className="w-4 h-4 text-red-400 mt-1 shrink-0" />
+                          Der CAC ist zu hoch, weil ihr Geld verbrennt.
+                        </li>
+                        <li className="flex items-start gap-2 text-brand-gray text-sm">
+                          <XCircle className="w-4 h-4 text-red-400 mt-1 shrink-0" />
+                          Wachstum passiert eher zufällig als systematisch.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                      <div className="flex items-center gap-2 text-brand-primary font-bold mb-1">
+                        <ArrowRightCircle className="w-5 h-5" /> Dein Outcome
+                      </div>
+                      <p className="text-brand-navy text-sm">
+                        Skalierbare Kanäle und sinkende Kosten durch smartes Conversion-Design.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Finance Block */}
+                  <div className="p-8 rounded-2xl bg-brand-light border border-slate-200">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-brand-primary">
+                        <Building2 className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-xl font-bold text-brand-navy">Finanz & Versicherungen</h3>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                      <p className="font-semibold text-brand-navy border-b border-slate-200 pb-2">Deine aktuellen Pains:</p>
+                      <ul className="space-y-2">
+                        <li className="flex items-start gap-2 text-brand-gray text-sm">
+                          <XCircle className="w-4 h-4 text-red-400 mt-1 shrink-0" />
+                          Du bist abhängig von Empfehlungen oder teuren Portalen.
+                        </li>
+                        <li className="flex items-start gap-2 text-brand-gray text-sm">
+                          <XCircle className="w-4 h-4 text-red-400 mt-1 shrink-0" />
+                          Wenig Sichtbarkeit im Vergleich zu den "Großen".
+                        </li>
+                        <li className="flex items-start gap-2 text-brand-gray text-sm">
+                          <XCircle className="w-4 h-4 text-red-400 mt-1 shrink-0" />
+                          Anfragen sind oft Müll und Zeitverschwendung.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                      <div className="flex items-center gap-2 text-brand-primary font-bold mb-1">
+                        <ArrowRightCircle className="w-5 h-5" /> Dein Outcome
+                      </div>
+                      <p className="text-brand-navy text-sm">
+                        Eigene Lead-Maschine unabhängig von Portalen und Termine mit Wunschkunden.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 3. SERVICES
+        const servicesData = [
+          { title: "Growth & Funnel Strategie", description: "Wir checken deinen Status Quo und bauen eine Roadmap, die deine Zielgruppe psychologisch wirklich abholt.", benefit: "Plan statt Rätselraten.", icon: Compass },
+          { title: "Kanal-Agnostische Acquisition", description: "Ob LinkedIn, Meta, Google, TikTok oder Pinterest – wir nutzen exakt die Plattformen, die für deine Unit Economics funktionieren. Die Strategie bestimmt den Kanal.", benefit: "Traffic, der kauft, nicht nur klickt.", icon: Target },
+          { title: "Tracking & Messbarkeit", description: "Setup von sauberem Server-Side-Tracking. Damit wir genau sehen, was Geld bringt und was Geld verbrennt.", benefit: "Kein Blindflug. Datenbasierte Fakten.", icon: BarChart2 },
+          { title: "Conversion Optimierung", description: "Tuning von Landingpages und Angeboten, um aus Besuchern echte Interessenten zu machen.", benefit: "Mehr Umsatz aus dem gleichen Budget.", icon: MousePointerClick }
+        ];
+
+        const Services = () => {
+          return (
+            <section className="py-24 bg-brand-light">
+              <div className="container mx-auto px-6">
+                <div className="text-center mb-16">
+                  <span className="text-brand-primary font-bold tracking-wider uppercase text-sm block mb-2">Leistungsübersicht</span>
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-brand-navy">
+                    Was du bekommst
+                  </h2>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {servicesData.map((service, index) => {
+                    const Icon = service.icon;
+                    return (
+                      <div key={index} className="bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow group">
+                        <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors text-brand-primary">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-lg font-bold text-brand-navy mb-3">{service.title}</h3>
+                        <p className="text-brand-gray text-sm leading-relaxed mb-4 min-h-[60px]">
+                          {service.description}
+                        </p>
+                        <div className="pt-4 border-t border-slate-100">
+                           <p className="text-xs font-semibold text-brand-primary flex items-center gap-1">
+                             → {service.benefit}
+                           </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 4. CHANNELS
+        const ChannelsSection = () => {
+          return (
+            <section className="py-24 bg-white border-y border-slate-100">
+              <div className="container mx-auto px-6">
+                <div className="flex flex-col lg:flex-row gap-16 items-center">
+                    
+                    <div className="lg:w-1/2">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-brand-primary text-xs font-bold uppercase tracking-wider mb-6">
+                            <Layers className="w-4 h-4" />
+                            Die Toolbox
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-heading font-bold text-brand-navy mb-6">
+                            Strategie first. <br/>Kanal second.
+                        </h2>
+                        <p className="text-brand-gray text-lg leading-relaxed mb-6">
+                            Das Schlimmste, was du tun kannst: Einen Kanal bespielen, nur weil es "alle machen". Ich lege mich nie vorher fest.
+                        </p>
+                        <p className="text-brand-gray text-lg leading-relaxed mb-8">
+                            Wir überprüfen deine bisherigen Daten, deine Zielgruppe und deine Unit Economics. Darauf basierend wählen wir die Kanäle, die <span className="text-brand-navy font-bold">wirklich konvertieren</span>.
+                            Egal ob <span className="font-semibold text-brand-primary">Meta, LinkedIn, TikTok, Pinterest, YouTube oder Google</span> – alle relevanten Plattformen sind möglich, aber keine ist Pflicht.
+                        </p>
+                        
+                        <div className="p-4 bg-brand-light rounded-lg border-l-4 border-brand-primary">
+                            <p className="text-sm text-brand-navy italic">
+                                "Ich verkaufe dir keine 'Facebook Ads'. Ich verkaufe dir ein System zur Neukundengewinnung. Der Kanal ist nur das Mittel zum Zweck."
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div className="lg:w-1/2 grid grid-cols-2 gap-4">
+                        <div className="p-6 rounded-2xl bg-brand-light border border-slate-200 flex flex-col items-center text-center hover:shadow-md transition-all hover:-translate-y-1">
+                             <Linkedin className="w-10 h-10 text-[#0077b5] mb-4" />
+                             <span className="font-bold text-brand-navy text-lg">LinkedIn</span>
+                             <span className="text-xs text-brand-gray mt-2">B2B Entscheider &<br/>Account Based Marketing</span>
+                        </div>
+                        <div className="p-6 rounded-2xl bg-brand-light border border-slate-200 flex flex-col items-center text-center hover:shadow-md transition-all hover:-translate-y-1">
+                             <div className="flex gap-3 justify-center mb-4">
+                                <Search className="w-10 h-10 text-[#EA4335]" />
+                                <Youtube className="w-10 h-10 text-[#FF0000]" />
+                             </div>
+                             <span className="font-bold text-brand-navy text-lg">Google & YouTube</span>
+                             <span className="text-xs text-brand-gray mt-2">High Intent Search &<br/>Video Demand</span>
+                        </div>
+                        <div className="p-6 rounded-2xl bg-brand-light border border-slate-200 flex flex-col items-center text-center hover:shadow-md transition-all hover:-translate-y-1">
+                             <Facebook className="w-10 h-10 text-[#1877F2] mb-4" />
+                             <span className="font-bold text-brand-navy text-lg">Meta (FB/IG)</span>
+                             <span className="text-xs text-brand-gray mt-2">Massive Scale &<br/>Retargeting</span>
+                        </div>
+                         <div className="p-6 rounded-2xl bg-brand-light border border-slate-200 flex flex-col items-center text-center hover:shadow-md transition-all hover:-translate-y-1">
+                             <Smartphone className="w-10 h-10 text-brand-navy mb-4" />
+                             <span className="font-bold text-brand-navy text-lg">TikTok / Pinterest</span>
+                             <span className="text-xs text-brand-gray mt-2">Discovery, Viralität &<br/>Visuelle Inspiration</span>
+                        </div>
+                    </div>
+
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 5. PROCESS
+        const ProcessSection = () => {
+          const steps = [
+            { num: "01", title: "Analyse & Hebel", desc: "Wir finden die größten Wachstumshebel in deinem aktuellen Setup." },
+            { num: "02", title: "Strategie & Plan", desc: "Ich entwickle eine klare Roadmap. Mein Investment in unsere Partnerschaft." },
+            { num: "03", title: "Umsetzung", desc: "Setup der Kampagnen, Funnels und des kompletten Trackings." },
+            { num: "04", title: "Optimierung", desc: "Laufende Tests und Anpassungen basierend auf echten Daten." },
+            { num: "05", title: "Reporting & Billing", desc: "Abrechnung erfolgt nur bei Zielerreichung. Transparente Zahlen, fairer Split." }
+          ];
+
+          return (
+            <section className="py-24 bg-white border-t border-slate-100">
+              <div className="container mx-auto px-6">
+                <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
+                  
+                  <div className="w-full md:w-1/3 md:sticky md:top-32 mb-12 md:mb-0">
+                    <h2 className="text-3xl md:text-4xl font-heading font-bold text-brand-navy mb-6">
+                      So arbeiten wir zusammen
+                    </h2>
+                    <p className="text-brand-gray text-lg mb-8">
+                      Kein Black-Box-Prinzip. Ein transparenter Prozess, volle Einsicht und schnelle Iterationen.
+                    </p>
+                    <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
+                      <p className="font-bold text-brand-navy mb-2">Der Deal:</p>
+                      <p className="text-sm text-brand-gray">
+                        Ich gehe in Vorleistung. Strategie und Setup kosten dich nichts. Ich verdiene nur, wenn die Performance stimmt.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="w-full md:w-2/3 grid gap-8">
+                    {steps.map((step, idx) => (
+                      <div key={idx} className="flex gap-6 group">
+                        <div className="shrink-0 w-12 h-12 rounded-full border-2 border-slate-200 flex items-center justify-center font-bold text-slate-400 group-hover:border-brand-primary group-hover:text-brand-primary transition-colors bg-white">
+                          {step.num}
+                        </div>
+                        <div className="pt-2 pb-8 border-b border-slate-100 w-full group-last:border-0">
+                          <h3 className="text-xl font-bold text-brand-navy mb-2">{step.title}</h3>
+                          <p className="text-brand-gray">{step.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 6. PERFORMANCE / USP
+        const PerformanceSection = () => {
+          return (
+            <section className="py-24 bg-brand-navy text-white relative overflow-hidden">
+               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#4b5563 1px, transparent 1px)', backgroundSize: '32px 32px' }} aria-hidden="true"></div>
+
+              <div className="container mx-auto px-6 relative z-10">
+                <div className="max-w-3xl mx-auto text-center mb-16">
+                  <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">
+                    Warum performance-basiert?
+                  </h2>
+                  <p className="text-slate-300 text-lg">
+                    Das alte Agentur-Modell ist kaputt. Retainer machen faul. Ich drehe den Spieß um und gehe in Vorleistung.
+                  </p>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-8 mb-16">
+                  <div className="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 backdrop-blur-sm">
+                    <Wallet className="w-10 h-10 text-brand-primary mb-6" aria-hidden="true" />
+                    <h3 className="text-xl font-bold mb-4">0€ Fixkosten</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Kein Setup-Honorar. Keine monatliche Pauschale. Dein Budget fließt zu 100% in die Werbung, nicht in meinen Overhead.
+                    </p>
+                  </div>
+                  <div className="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 backdrop-blur-sm">
+                    <Scale className="w-10 h-10 text-brand-primary mb-6" aria-hidden="true" />
+                    <h3 className="text-xl font-bold mb-4">Ich investiere in dich</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Ich übernehme das Risiko. Wenn wir den Umsatz nicht steigern, verdiene ich keinen Cent. Das garantiert dir meine volle Aufmerksamkeit.
+                    </p>
+                  </div>
+                  <div className="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 backdrop-blur-sm">
+                    <PieChart className="w-10 h-10 text-brand-primary mb-6" aria-hidden="true" />
+                    <h3 className="text-xl font-bold mb-4">Erfolgsbeteiligung</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Du beteiligst mich fair am generierten Mehrwert oder Umsatz. Wir wachsen zusammen – oder gar nicht.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                    <a 
+                      href="#contact"
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-white text-brand-navy rounded-full font-bold hover:bg-slate-100 transition-colors"
+                    >
+                      Lass uns quatschen
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 7. CASE STUDY
+        const CaseStudy = () => {
+          return (
+            <section className="py-24 bg-brand-light">
+              <div className="container mx-auto px-6">
+                <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+                  <div className="flex flex-col md:flex-row">
+                    
+                    <div className="p-10 md:w-3/5">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider mb-6">
+                        Success Story
+                      </div>
+                      <h3 className="text-3xl font-heading font-bold text-brand-navy mb-4">
+                        +40% Umsatzwachstum in 6 Monaten
+                      </h3>
+                      <p className="text-brand-gray mb-8 leading-relaxed">
+                        Ein B2B-SaaS Kunde steckte fest: Neukundengewinnung stagnierte, CPLs auf LinkedIn waren zu teuer, Pipeline unvorhersehbar.
+                        <br /><br />
+                        Durch den Wechsel auf mein Performance-Framework und eine radikale Vereinfachung des Funnels haben wir die Lead-Qualität massiv gesteigert und den Umsatz gepusht.
+                      </p>
+                      
+                      <div className="grid grid-cols-2 gap-6 mb-8">
+                        <div>
+                          <p className="text-4xl font-bold text-brand-primary mb-1">40%</p>
+                          <p className="text-sm text-brand-gray">Umsatzsteigerung</p>
+                        </div>
+                        <div>
+                          <p className="text-4xl font-bold text-brand-primary mb-1">3.5x</p>
+                          <p className="text-sm text-brand-gray">ROAS</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-brand-navy p-10 md:w-2/5 flex flex-col justify-center text-white relative overflow-hidden">
+                       <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary opacity-20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                       
+                       <div className="relative z-10 text-center md:text-left">
+                         <p className="text-lg italic font-light opacity-90 mb-6">
+                           "Endlich ein Partner, der nicht nur Reports schickt, sondern Ergebnisse liefert. Das Modell ist fair und motivierend für beide Seiten."
+                         </p>
+                         <div className="flex items-center gap-3 justify-center md:justify-start">
+                            <div className="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center">
+                                <User className="w-5 h-5 text-slate-300" />
+                            </div>
+                            <div>
+                                <p className="font-bold text-sm">Geschäftsführer</p>
+                                <p className="text-xs text-slate-400">FinTech SaaS (DACH)</p>
+                            </div>
+                         </div>
+                       </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 8. FAQ
+        const faqs = [
+          { question: "Gibt es wirklich keine Fixkosten oder Setup-Fees?", answer: "Ja, zu 100%. Kein Setup, kein Retainer, keine 'Fee pro Lead'. Ich werde ausschließlich am tatsächlichen Umsatz oder Deckungsbeitrag beteiligt (Revenue Share). Das heißt: Ich verdiene nur dann Geld, wenn auf deinem Konto Geld eingeht." },
+          { question: "Woran messen wir den Erfolg?", answer: "Ausschließlich am harten Euro. Leads und Pipeline sind Mittel zum Zweck, aber keine Währung. Meine Vergütung basiert auf dem 'Closed Won Revenue' oder dem erwirtschafteten Deckungsbeitrag. Keine Vanity-Metriken." },
+          { question: "Für wen passt das?", answer: "Da ich das volle finanzielle Risiko trage, arbeite ich nur mit Firmen, an die ich glaube. Du brauchst Product-Market-Fit und ein valides Geschäftsmodell. Außerdem musst du bereit sein, Budget für Werbeanzeigen (Ad Spend) bereitzustellen." },
+          { question: "Wie schnell sehen wir Ergebnisse?", answer: "In der Regel sehen wir erste valide Daten nach 2-4 Wochen. Skalierbare Ergebnisse und ein positiver ROI stellen sich meist innerhalb der ersten 3 Monate ein." },
+          { question: "Was brauchen wir zum Starten?", answer: "Ein kurzes Erstgespräch zum Checken, ob die Chemie stimmt. Wenn's passt, brauche ich Zugriff auf deine Assets (Webseite, Ad-Accounts, CRM) und ein Budget für Paid Media." },
+          { question: "Welche Kanäle nutzen wir?", answer: "Ich bin Plattform-Agnostiker. Ich drücke dich nicht in einen Kanal, nur weil ich ihn mag. Wir analysieren, wo deine Kunden sind – ob LinkedIn, Meta, TikTok, Pinterest, YouTube oder Search. Der Kanal ist nur das Werkzeug, die Strategie bestimmt den Einsatz." }
+        ];
+
+        const FAQ = () => {
+          const [openIndex, setOpenIndex] = useState(0);
+
+          return (
+            <section className="py-24 bg-white border-t border-slate-100">
+              <div className="container mx-auto px-6 max-w-3xl">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-heading font-bold text-brand-navy mb-4">
+                    Häufige Fragen
+                  </h2>
+                  <p className="text-brand-gray">
+                    Transparenz ist alles. Hier die Antworten.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {faqs.map((faq, index) => (
+                    <div 
+                      key={index} 
+                      className="border border-slate-200 rounded-xl overflow-hidden transition-all duration-200 bg-brand-light"
+                    >
+                      <button
+                        onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                        className="w-full flex justify-between items-center p-5 text-left bg-white hover:bg-slate-50 transition-colors"
+                      >
+                        <span className="font-bold text-brand-navy pr-4">{faq.question}</span>
+                        {openIndex === index ? (
+                          <ChevronUp className="w-5 h-5 text-brand-primary shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5 text-brand-gray shrink-0" />
+                        )}
+                      </button>
+                      
+                      <div 
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                          openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        <div className="p-5 pt-0 text-brand-gray text-sm leading-relaxed border-t border-slate-100 bg-white">
+                          {faq.answer}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 9. CONTACT FORM (with HubSpot)
+        const ContactForm = () => {
+          useEffect(() => {
+            const scriptId = 'hubspot-form-script';
+            const existingScript = document.getElementById(scriptId);
+
+            if (existingScript) {
+              if (window.hbspt) {
+                window.hbspt.forms.create({
+                  portalId: "5101828",
+                  formId: "cb0a9175-6ef0-4717-86fc-c6d6315ec59d",
+                  region: "na1",
+                  target: '#hubspotForm'
+                });
+              }
+              return;
+            }
+
+            const script = document.createElement('script');
+            script.id = scriptId;
+            script.src = "//js.hsforms.net/forms/embed/v2.js";
+            script.charset = "utf-8";
+            script.type = "text/javascript";
+            
+            script.onload = () => {
+              if (window.hbspt) {
+                window.hbspt.forms.create({
+                  portalId: "5101828",
+                  formId: "cb0a9175-6ef0-4717-86fc-c6d6315ec59d",
+                  region: "na1",
+                  target: '#hubspotForm'
+                });
+              }
+            };
+
+            document.body.appendChild(script);
+          }, []);
+
+          return (
+            <section className="py-24 bg-brand-navy relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-brand-primary/10 to-transparent pointer-events-none"></div>
+
+              <div className="container mx-auto px-6 relative z-10">
+                <div className="flex flex-col lg:flex-row gap-12 items-center max-w-6xl mx-auto">
+                  
+                  <div className="lg:w-1/2 text-white">
+                    <h2 className="text-3xl md:text-5xl font-heading font-bold mb-6">
+                      Lass uns über <span className="text-brand-primary">dein Wachstum</span> sprechen.
+                    </h2>
+                    <p className="text-slate-300 text-lg mb-8">
+                      Finden wir in einem kurzen Gespräch heraus, ob wir zusammenpassen und wo wir bei dir den Hebel ansetzen können.
+                    </p>
+                    
+                    <div className="space-y-4 mb-8">
+                       <div className="flex items-center gap-3">
+                         <CheckCircle className="w-5 h-5 text-brand-primary" />
+                         <span className="text-slate-200">Unverbindlicher Check</span>
+                       </div>
+                       <div className="flex items-center gap-3">
+                         <CheckCircle className="w-5 h-5 text-brand-primary" />
+                         <span className="text-slate-200">Kein Verkaufsdruck</span>
+                       </div>
+                       <div className="flex items-center gap-3">
+                         <CheckCircle className="w-5 h-5 text-brand-primary" />
+                         <span className="text-slate-200">Antwort innerhalb von 24h</span>
+                       </div>
+                    </div>
+
+                    <div className="inline-flex items-center gap-2 text-slate-400 text-sm">
+                       <Mail className="w-4 h-4" />
+                       <a href="mailto:oliver@okr-digital.at" className="hover:text-white transition-colors">oliver@okr-digital.at</a>
+                    </div>
+                  </div>
+
+                  <div className="lg:w-1/2 w-full">
+                    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-2xl">
+                      <div id="hubspotForm" className="min-h-[400px]">
+                         <div className="flex items-center justify-center h-full text-brand-gray text-sm animate-pulse">
+                           Lade Formular...
+                         </div>
+                      </div>
+                      <p className="text-center text-slate-400 text-xs mt-4">
+                        Deine Daten sind bei mir sicher. Datenschutz ist Ehrensache.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        // 10. FOOTER
+        const Footer = () => {
+          return (
+            <footer className="bg-slate-50 py-12 border-t border-slate-200 text-brand-navy">
+              <div className="container mx-auto px-6">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                  
+                  <div className="text-center md:text-left">
+                    <h3 className="text-xl font-extrabold tracking-tight mb-2">OKR<span className="text-brand-primary">.digital</span></h3>
+                    <p className="text-brand-gray text-sm">Performance Growth für SaaS & Finance.</p>
+                  </div>
+
+                  <div className="flex gap-6">
+                     <a href="#" className="text-brand-gray hover:text-brand-primary transition-colors" aria-label="Besuche OKR Digital auf LinkedIn"><Linkedin className="w-6 h-6" /></a>
+                     <a href="mailto:oliver@okr-digital.at" className="text-brand-gray hover:text-brand-primary transition-colors" aria-label="Sende eine E-Mail"><Mail className="w-6 h-6" /></a>
+                  </div>
+
+                  <div className="flex gap-6 text-sm text-brand-gray">
+                    <a href="#" className="hover:text-brand-navy transition-colors">Impressum</a>
+                    <a href="#" className="hover:text-brand-navy transition-colors">Datenschutz</a>
+                  </div>
+                </div>
+                
+                <div className="mt-12 pt-8 border-t border-slate-200 text-center text-slate-400 text-xs">
+                  &copy; {new Date().getFullYear()} OKR Digital. All rights reserved.
+                </div>
+              </div>
+            </footer>
+          );
+        };
+
+        // --- MAIN APP ---
+        const App = () => {
+          const [isScrolled, setIsScrolled] = useState(false);
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+          const { scrollY } = useScroll();
+
+          useMotionValueEvent(scrollY, "change", (latest) => {
+            setIsScrolled(latest > 50);
+          });
+
+          const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+          const closeMenu = () => setIsMobileMenuOpen(false);
+
+          const navLinks = [
+            { href: "#services", label: "Leistungen" },
+            { href: "#process", label: "Prozess" },
+            { href: "#performance", label: "Modell" },
+            { href: "#faq", label: "FAQ" },
+          ];
+
+          return (
+            <div className="min-h-screen bg-brand-light text-brand-navy selection:bg-brand-primary selection:text-white flex flex-col">
+              {/* Sticky Navigation */}
+              <nav 
+                className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b ${
+                  isScrolled 
+                    ? 'bg-white/95 backdrop-blur-md border-brand-navy/5 py-3 shadow-sm' 
+                    : 'bg-transparent border-transparent py-5'
+                }`}
+                role="navigation"
+                aria-label="Main Navigation"
+              >
+                <div className="container mx-auto px-6 flex items-center justify-between">
+                  <a href="#" onClick={closeMenu} className="text-xl font-extrabold tracking-tight text-brand-navy z-50 relative">
+                    OKR<span className="text-brand-primary">.digital</span>
+                  </a>
+                  
+                  {/* Desktop Nav */}
+                  <div className="hidden md:flex items-center gap-8">
+                    <div className="flex gap-6 text-sm font-medium text-brand-gray">
+                      {navLinks.map((link) => (
+                        <a key={link.href} href={link.href} className="hover:text-brand-primary transition-colors">
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                    <a 
+                      href="#contact"
+                      className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all inline-block ${
+                        isScrolled
+                          ? 'bg-brand-primary text-white hover:bg-blue-700 shadow-md'
+                          : 'bg-brand-navy text-white hover:bg-brand-primary shadow-lg'
+                      }`}
+                    >
+                      Lass uns sprechen
+                    </a>
+                  </div>
+
+                  {/* Mobile Menu Button */}
+                  <button 
+                    className="md:hidden z-50 p-2 text-brand-navy"
+                    onClick={toggleMenu}
+                    aria-label={isMobileMenuOpen ? "Menü schließen" : "Menü öffnen"}
+                  >
+                    {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                  </button>
+
+                  {/* Mobile Nav Overlay */}
+                  <AnimatePresence>
+                    {isMobileMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
+                      >
+                        {navLinks.map((link) => (
+                          <a 
+                            key={link.href} 
+                            href={link.href} 
+                            onClick={closeMenu}
+                            className="text-2xl font-bold text-brand-navy hover:text-brand-primary"
+                          >
+                            {link.label}
+                          </a>
+                        ))}
+                        <a 
+                          href="#contact" 
+                          onClick={closeMenu}
+                          className="px-8 py-3 bg-brand-primary text-white text-lg font-bold rounded-lg shadow-lg"
+                        >
+                          Lass uns sprechen
+                        </a>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </nav>
+
+              <main className="flex-grow">
+                <Hero />
+                <div id="target-group"><TargetGroup /></div>
+                <div id="services"><Services /></div>
+                <ChannelsSection />
+                <div id="process"><ProcessSection /></div>
+                <div id="performance"><PerformanceSection /></div>
+                <div id="proof"><CaseStudy /></div>
+                <div id="faq"><FAQ /></div>
+                <div id="contact"><ContactForm /></div>
+              </main>
+
+              <Footer />
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
