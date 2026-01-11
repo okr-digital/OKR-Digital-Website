@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Calendar, Clock, ChevronRight, User, Tag } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, ChevronRight, User, Tag, Search, ChevronLeft, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // --- DATA STRUCTURE & SEO TYPES ---
@@ -25,7 +25,8 @@ const SITE_URL = "https://okr-digital.at"; // Base URL for canonicals
 const DEFAULT_TITLE = "OKR.digital | Insights & Strategien für SaaS Growth";
 const DEFAULT_DESC = "Kein BlaBla. Nur Taktiken, die in der Praxis funktionieren. Deep Dives in Unit Economics, Funnel-Psychologie und Skalierung.";
 
-const BLOG_POSTS: BlogPost[] = [
+// --- EXPANDED MOCK DATA (To demonstrate pagination) ---
+const ORIGINAL_POSTS: BlogPost[] = [
   {
     id: 'saas-metrics-2024',
     slug: 'saas-unit-economics-cac-berechnung',
@@ -138,6 +139,109 @@ const BLOG_POSTS: BlogPost[] = [
   }
 ];
 
+// GENERATE MORE MOCK POSTS TO SHOW PAGINATION
+const BLOG_POSTS: BlogPost[] = [
+  ...ORIGINAL_POSTS,
+  {
+    id: 'cro-landingpage-hacks',
+    slug: 'cro-landingpage-hacks',
+    title: '5 CRO Hacks für SaaS Landingpages',
+    excerpt: 'Warum dein Traffic nicht konvertiert: Die häufigsten Fehler auf Pricing-Pages und wie du sie in 30 Minuten beheben kannst.',
+    date: '15. Februar 2024',
+    dateIso: '2024-02-15',
+    readTime: '6 Min.',
+    category: 'Conversion',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['CRO', 'SaaS', 'Landingpage'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  },
+  {
+    id: 'cold-email-setup',
+    slug: 'cold-email-setup',
+    title: 'Cold Outreach ist tot? (Datenanalyse)',
+    excerpt: 'Wir haben 50.000 Cold Mails analysiert. Hier ist der Unterschied zwischen einer 0.5% und einer 5% Reply Rate.',
+    date: '10. Februar 2024',
+    dateIso: '2024-02-10',
+    readTime: '8 Min.',
+    category: 'Outbound',
+    image: 'https://images.unsplash.com/photo-1557200134-90327ee9fafa?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Outbound', 'Sales', 'Email'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  },
+  {
+    id: 'google-ads-b2b',
+    slug: 'google-ads-b2b',
+    title: 'Google Ads für B2B: Broad Match Disaster',
+    excerpt: 'Warum du "Smart Bidding" bei kleinen Budgets sofort ausschalten solltest und wie Alpha-Beta Strukturen funktionieren.',
+    date: '02. Februar 2024',
+    dateIso: '2024-02-02',
+    readTime: '5 Min.',
+    category: 'Paid Search',
+    image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Google Ads', 'SEA', 'B2B'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  },
+  {
+    id: 'attribution-modeling',
+    slug: 'attribution-modeling',
+    title: 'Attribution Modeling für CEOs',
+    excerpt: 'Last-Click ist tot. Aber Data-Driven ist oft Overkill. Welches Attributionsmodell für welche Phase das richtige ist.',
+    date: '28. Januar 2024',
+    dateIso: '2024-01-28',
+    readTime: '4 Min.',
+    category: 'Analytics',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Analytics', 'Attribution', 'Data'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  },
+  {
+    id: 'meta-ads-creative',
+    slug: 'meta-ads-creative',
+    title: 'Creative is the new Targeting',
+    excerpt: 'Auf Meta (Facebook/Instagram) entscheidet das Creative über 80% der Performance. Frameworks für High-Converting UGC.',
+    date: '15. Januar 2024',
+    dateIso: '2024-01-15',
+    readTime: '6 Min.',
+    category: 'Paid Social',
+    image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Meta Ads', 'Creatives', 'UGC'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  },
+   {
+    id: 'webinar-funnel',
+    slug: 'webinar-funnel',
+    title: 'Der perfekte Webinar Funnel',
+    excerpt: 'Webinare sind nicht tot, sie sind nur langweilig geworden. Wie du mit 15-Minuten "Mini-Webinaren" qualifizierte Leads gewinnst.',
+    date: '10. Januar 2024',
+    dateIso: '2024-01-10',
+    readTime: '7 Min.',
+    category: 'Funnels',
+    image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Webinar', 'Funnel', 'Lead Gen'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  },
+  {
+    id: 'pricing-psychology',
+    slug: 'pricing-psychology',
+    title: 'Pricing Psychologie im B2B',
+    excerpt: 'Decoy-Effekt, Anchoring und warum "Angebot auf Anfrage" deine Conversion Rate halbiert.',
+    date: '05. Januar 2024',
+    dateIso: '2024-01-05',
+    readTime: '5 Min.',
+    category: 'Strategy',
+    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Pricing', 'Psychologie', 'Sales'],
+    content: <p>Platzhalter Content für Demonstration der Pagination.</p>
+  }
+];
+
 // --- SEO HELPER FUNCTIONS ---
 
 const updateMeta = (name: string, content: string, attribute = 'name') => {
@@ -173,14 +277,39 @@ interface BlogProps {
   onBack: () => void;
 }
 
+const POSTS_PER_PAGE = 6;
+
 const Blog: React.FC<BlogProps> = ({ onBack }) => {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Helper to find the active post
   const activePost = selectedPostId ? BLOG_POSTS.find(p => p.id === selectedPostId) : null;
 
   // SCROLL TO TOP helper
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Filter Logic
+  const filteredPosts = BLOG_POSTS.filter(post => {
+    const term = searchTerm.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(term) ||
+      post.excerpt.toLowerCase().includes(term) ||
+      post.category.toLowerCase().includes(term) ||
+      post.keywords.some(k => k.toLowerCase().includes(term))
+    );
+  });
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const currentPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+  // Reset page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // --- SEO EFFECT ---
   useEffect(() => {
@@ -245,8 +374,6 @@ const Blog: React.FC<BlogProps> = ({ onBack }) => {
     // Cleanup when component unmounts (e.g. navigating to Contact via App.tsx)
     return () => {
       document.title = DEFAULT_TITLE;
-      // We don't necessarily reset metas here to avoid flickering if switching views fast, 
-      // but standard practice is to let the next view handle its own SEO or revert to default.
     };
   }, [activePost]);
 
@@ -347,66 +474,158 @@ const Blog: React.FC<BlogProps> = ({ onBack }) => {
       <div className="container mx-auto px-6">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-brand-primary text-xs font-bold uppercase tracking-wider mb-4">
              Inside Growth
           </div>
           <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-brand-navy mb-6">
             Insights & Strategien
           </h1>
-          <p className="text-brand-gray text-lg">
+          <p className="text-brand-gray text-lg mb-8">
             Kein BlaBla. Nur Taktiken, die in der Praxis funktionieren.
             Deep Dives in Unit Economics, Funnel-Psychologie und Skalierung.
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {BLOG_POSTS.map((post) => (
-            <motion.div 
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col h-full"
-              onClick={() => { setSelectedPostId(post.id); scrollToTop(); }}
-            >
-              {/* Image */}
-              <div className="h-48 overflow-hidden relative">
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brand-navy flex items-center gap-1">
-                  <Tag className="w-3 h-3 text-brand-primary" />
-                  {post.category}
-                </div>
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-grow">
-                <div className="flex items-center gap-4 text-xs text-brand-gray mb-3">
-                  <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
-                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {post.readTime}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-brand-navy mb-3 leading-tight group-hover:text-brand-primary transition-colors">
-                  {post.title}
-                </h3>
-                
-                <p className="text-brand-gray text-sm line-clamp-3 mb-6 flex-grow">
-                  {post.excerpt}
-                </p>
-
-                <div className="flex items-center text-brand-primary font-bold text-sm mt-auto">
-                  Artikel lesen <ChevronRight className="w-4 h-4 ml-1" />
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* SEARCH BAR */}
+        <div className="max-w-md mx-auto mb-16 relative">
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-brand-gray group-focus-within:text-brand-primary transition-colors" />
+            </div>
+            <input
+              type="text"
+              placeholder="Suche nach Themen, Keywords..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="block w-full pl-12 pr-12 py-4 bg-white border border-slate-200 rounded-full text-brand-navy placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all shadow-sm hover:shadow-md"
+            />
+            {searchTerm && (
+              <button 
+                onClick={() => setSearchTerm('')}
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-brand-primary transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Results Info (Optional, shows if filtered) */}
+        {searchTerm && (
+           <p className="text-center text-sm text-brand-gray mb-8">
+             {filteredPosts.length} Ergebnisse für "{searchTerm}"
+           </p>
+        )}
+
+        {/* Grid */}
+        {currentPosts.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+            {currentPosts.map((post) => (
+              <motion.div 
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col h-full"
+                onClick={() => { setSelectedPostId(post.id); scrollToTop(); }}
+              >
+                {/* Image */}
+                <div className="h-48 overflow-hidden relative">
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brand-navy flex items-center gap-1">
+                    <Tag className="w-3 h-3 text-brand-primary" />
+                    {post.category}
+                  </div>
+                  <img 
+                    src={post.image} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex items-center gap-4 text-xs text-brand-gray mb-3">
+                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
+                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {post.readTime}</span>
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-brand-navy mb-3 leading-tight group-hover:text-brand-primary transition-colors">
+                    {post.title}
+                  </h3>
+                  
+                  <p className="text-brand-gray text-sm line-clamp-3 mb-6 flex-grow">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="flex items-center text-brand-primary font-bold text-sm mt-auto">
+                    Artikel lesen <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-24 bg-white rounded-2xl border border-dashed border-slate-300 max-w-3xl mx-auto">
+             <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-50 rounded-full mb-4">
+                <Search className="w-8 h-8 text-slate-300" />
+             </div>
+             <h3 className="text-xl font-bold text-brand-navy mb-2">Keine Artikel gefunden</h3>
+             <p className="text-brand-gray">Versuche es mit einem anderen Suchbegriff.</p>
+             <button 
+               onClick={() => setSearchTerm('')}
+               className="mt-6 text-brand-primary font-bold hover:underline"
+             >
+               Suche zurücksetzen
+             </button>
+          </div>
+        )}
+
+        {/* PAGINATION */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4">
+            <button
+              onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); scrollToTop(); }}
+              disabled={currentPage === 1}
+              className={`p-3 rounded-full border border-slate-200 transition-all ${
+                currentPage === 1 
+                  ? 'text-slate-300 cursor-not-allowed bg-slate-50' 
+                  : 'text-brand-navy hover:bg-brand-primary hover:text-white hover:border-brand-primary shadow-sm'
+              }`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                 <button
+                   key={page}
+                   onClick={() => { setCurrentPage(page); scrollToTop(); }}
+                   className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                     currentPage === page
+                       ? 'bg-brand-navy text-white shadow-md scale-110'
+                       : 'bg-white text-brand-gray hover:bg-slate-50 border border-slate-200'
+                   }`}
+                 >
+                   {page}
+                 </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); scrollToTop(); }}
+              disabled={currentPage === totalPages}
+              className={`p-3 rounded-full border border-slate-200 transition-all ${
+                currentPage === totalPages 
+                  ? 'text-slate-300 cursor-not-allowed bg-slate-50' 
+                  : 'text-brand-navy hover:bg-brand-primary hover:text-white hover:border-brand-primary shadow-sm'
+              }`}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
 
       </div>
     </div>
