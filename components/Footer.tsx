@@ -2,7 +2,7 @@ import React from 'react';
 import { Linkedin, Mail } from 'lucide-react';
 
 interface FooterProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (view: any) => void; // Using 'any' briefly to match the ViewState type in App.tsx implicitly or strict ViewState string
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
@@ -42,21 +42,21 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           <div className="flex gap-6 text-sm text-brand-gray font-medium">
              <a 
-              href="#blog"
+              href="/blog"
               onClick={(e) => handleNav(e, 'blog')} 
               className="hover:text-brand-primary hover:underline transition-all"
             >
               Blog
             </a>
             <a 
-              href="#impressum"
+              href="/impressum"
               onClick={(e) => handleNav(e, 'impressum')} 
               className="hover:text-brand-primary hover:underline transition-all"
             >
               Impressum
             </a>
             <a 
-              href="#datenschutz"
+              href="/datenschutz"
               onClick={(e) => handleNav(e, 'datenschutz')}
               className="hover:text-brand-primary hover:underline transition-all"
             >
