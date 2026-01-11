@@ -36,6 +36,12 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
 
           <div className="flex gap-6 text-sm text-brand-gray">
+             <button 
+              onClick={() => onNavigate('blog')} 
+              className="hover:text-brand-navy transition-colors"
+            >
+              Blog
+            </button>
             <button 
               onClick={() => onNavigate('impressum')} 
               className="hover:text-brand-navy transition-colors"

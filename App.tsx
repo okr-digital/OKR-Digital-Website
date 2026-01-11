@@ -14,8 +14,9 @@ import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import Impressum from './components/Impressum';
 import Datenschutz from './components/Datenschutz';
+import Blog from './components/Blog';
 
-type ViewState = 'home' | 'impressum' | 'datenschutz';
+type ViewState = 'home' | 'impressum' | 'datenschutz' | 'blog';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -37,11 +38,11 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Main page navigation links
   const navLinks = [
-    { href: "#services", label: "Leistungen" },
-    { href: "#process", label: "Prozess" },
-    { href: "#performance", label: "Modell" },
-    { href: "#faq", label: "FAQ" },
+    { href: "#services", label: "Leistungen", action: () => {} },
+    { href: "#process", label: "Prozess", action: () => {} },
+    { href: "#performance", label: "Modell", action: () => {} },
   ];
 
   return (
@@ -68,17 +69,28 @@ const App: React.FC = () => {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <div className="flex gap-6 text-sm font-medium text-brand-gray">
-              {currentView === 'home' && navLinks.map((link) => (
-                <a key={link.href} href={link.href} className="hover:text-brand-primary transition-colors">
-                  {link.label}
-                </a>
-              ))}
-              {currentView !== 'home' && (
+              {/* Home anchors only work if on home view */}
+              {currentView === 'home' ? (
+                navLinks.map((link) => (
+                  <a key={link.href} href={link.href} className="hover:text-brand-primary transition-colors">
+                    {link.label}
+                  </a>
+                ))
+              ) : (
                 <button onClick={() => navigateTo('home')} className="hover:text-brand-primary transition-colors">
-                  Zurück zur Startseite
+                  Startseite
                 </button>
               )}
+              
+              {/* Blog Link - Always visible */}
+              <button 
+                onClick={() => navigateTo('blog')} 
+                className={`hover:text-brand-primary transition-colors ${currentView === 'blog' ? 'text-brand-primary font-bold' : ''}`}
+              >
+                Blog
+              </button>
             </div>
+
             <a 
               href="#contact"
               onClick={(e) => { 
@@ -119,16 +131,19 @@ const App: React.FC = () => {
                 exit={{ opacity: 0, y: -20 }}
                 className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
               >
-                {currentView === 'home' ? navLinks.map((link) => (
-                  <a 
-                    key={link.href} 
-                    href={link.href} 
-                    onClick={closeMenu}
-                    className="text-2xl font-bold text-brand-navy hover:text-brand-primary"
-                  >
-                    {link.label}
-                  </a>
-                )) : (
+                {/* Mobile Links */}
+                {currentView === 'home' ? (
+                  navLinks.map((link) => (
+                    <a 
+                      key={link.href} 
+                      href={link.href} 
+                      onClick={closeMenu}
+                      className="text-2xl font-bold text-brand-navy hover:text-brand-primary"
+                    >
+                      {link.label}
+                    </a>
+                  ))
+                ) : (
                   <button 
                     onClick={() => navigateTo('home')}
                     className="text-2xl font-bold text-brand-navy hover:text-brand-primary"
@@ -136,6 +151,14 @@ const App: React.FC = () => {
                     Startseite
                   </button>
                 )}
+
+                <button 
+                    onClick={() => navigateTo('blog')}
+                    className="text-2xl font-bold text-brand-navy hover:text-brand-primary"
+                >
+                    Blog
+                </button>
+
                 <a 
                   href="#contact" 
                   onClick={() => {
@@ -177,6 +200,9 @@ const App: React.FC = () => {
         )}
         {currentView === 'datenschutz' && (
           <Datenschutz onBack={() => navigateTo('home')} />
+        )}
+        {currentView === 'blog' && (
+          <Blog onBack={() => navigateTo('home')} />
         )}
       </main>
 
