@@ -1,29 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Clock, ChevronRight, User, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// --- DATA STRUCTURE ---
-// In a real scenario, this could be moved to a separate file
+// --- DATA STRUCTURE & SEO TYPES ---
+
 interface BlogPost {
   id: string;
+  slug: string; // URL slug for canonicals
   title: string;
+  seoTitle?: string; // Optional: distinct title for Google
   excerpt: string;
-  content: React.ReactNode; // Using ReactNode to allow simple HTML/JSX structuring
+  seoDescription?: string; // Optional: distinct meta description
+  content: React.ReactNode; 
   date: string;
+  dateIso: string; // ISO 8601 for Schema.org
   readTime: string;
   category: string;
   image: string;
+  author: string;
+  keywords: string[];
 }
+
+const SITE_URL = "https://okr-digital.at"; // Base URL for canonicals
+const DEFAULT_TITLE = "OKR.digital | Insights & Strategien für SaaS Growth";
+const DEFAULT_DESC = "Kein BlaBla. Nur Taktiken, die in der Praxis funktionieren. Deep Dives in Unit Economics, Funnel-Psychologie und Skalierung.";
 
 const BLOG_POSTS: BlogPost[] = [
   {
     id: 'saas-metrics-2024',
+    slug: 'saas-unit-economics-cac-berechnung',
     title: 'Warum dein CAC lügt: Die Wahrheit über B2B Unit Economics',
+    seoTitle: 'SaaS CAC Berechnung: Warum dein Blended CAC Budget verbrennt',
     excerpt: 'Die meisten SaaS-Founder berechnen ihre Customer Acquisition Costs falsch. Hier ist die Formel, die Investoren wirklich sehen wollen – und warum "Blended CAC" dein Budget verbrennt.',
+    seoDescription: 'Lerne, wie du Customer Acquisition Costs (CAC) für B2B SaaS korrekt berechnest. Blended CAC vs. Paid CAC und warum die Payback Period die wichtigste Metrik ist.',
     date: '12. Mai 2024',
+    dateIso: '2024-05-12',
     readTime: '5 Min.',
     category: 'Finance & Metrics',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['SaaS Metrics', 'CAC Berechnung', 'Unit Economics', 'B2B Marketing', 'Payback Period'],
     content: (
       <>
         <p className="mb-6 text-lg font-medium text-brand-navy">
@@ -54,12 +70,18 @@ const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: 'linkedin-ads-guide',
+    slug: 'linkedin-ads-b2b-strategie',
     title: 'LinkedIn Ads sind zu teuer? Du machst es falsch.',
+    seoTitle: 'LinkedIn Ads Strategie: B2B Leads unter Marktpreis generieren',
     excerpt: 'LinkedIn ist nicht Facebook. Wer hier "Lead Gen Forms" ohne Strategie schaltet, zahlt 150€ pro Lead. Wie du mit Account Based Marketing den Preis drückst.',
+    seoDescription: 'LinkedIn Ads sind teuer? Nicht mit der richtigen Strategie. Erfahre, wie du den "Trust-Layer" Ansatz und Video Views nutzt, um B2B Leads effizient zu gewinnen.',
     date: '03. April 2024',
+    dateIso: '2024-04-03',
     readTime: '7 Min.',
     category: 'Paid Social',
     image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['LinkedIn Ads', 'B2B Marketing', 'Account Based Marketing', 'Demand Gen', 'Performance Marketing'],
     content: (
       <>
         <p className="mb-6">
@@ -84,12 +106,18 @@ const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: 'performance-mindset',
+    slug: 'agentur-retainer-vs-performance',
     title: 'Warum Retainer Modelle Agenturen faul machen',
+    seoTitle: 'Agentur Retainer vs. Performance: Warum du Geld verbrennst',
     excerpt: 'Die klassische Agentur will Planungssicherheit. Du willst Wachstum. Warum diese Interessen oft kollidieren und wie Performance-Deals das Alignment erzwingen.',
+    seoDescription: 'Warum klassische Marketing-Agenturen mit Retainer-Modellen oft falsche Anreize setzen und wie Performance-Deals das Wachstum deines Unternehmens beschleunigen.',
     date: '20. März 2024',
+    dateIso: '2024-03-20',
     readTime: '4 Min.',
     category: 'Mindset',
     image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800',
+    author: 'Oliver',
+    keywords: ['Agentur Modell', 'Performance Marketing', 'Growth Mindset', 'SaaS Growth'],
     content: (
       <>
         <p className="mb-6">
@@ -110,6 +138,35 @@ const BLOG_POSTS: BlogPost[] = [
   }
 ];
 
+// --- SEO HELPER FUNCTIONS ---
+
+const updateMeta = (name: string, content: string, attribute = 'name') => {
+  let element = document.querySelector(`meta[${attribute}="${name}"]`);
+  if (!element) {
+    element = document.createElement('meta');
+    element.setAttribute(attribute, name);
+    document.head.appendChild(element);
+  }
+  element.setAttribute('content', content);
+};
+
+const updateJsonLd = (data: any) => {
+  const scriptId = 'blog-json-ld';
+  let element = document.getElementById(scriptId);
+  if (!element) {
+    element = document.createElement('script');
+    element.id = scriptId;
+    element.setAttribute('type', 'application/ld+json');
+    document.head.appendChild(element);
+  }
+  element.textContent = JSON.stringify(data);
+};
+
+const removeJsonLd = () => {
+  const element = document.getElementById('blog-json-ld');
+  if (element) element.remove();
+};
+
 // --- COMPONENT ---
 
 interface BlogProps {
@@ -125,6 +182,75 @@ const Blog: React.FC<BlogProps> = ({ onBack }) => {
   // SCROLL TO TOP helper
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  // --- SEO EFFECT ---
+  useEffect(() => {
+    if (activePost) {
+      // 1. Title
+      document.title = `${activePost.seoTitle || activePost.title} | OKR.digital`;
+      
+      // 2. Meta Tags
+      updateMeta('description', activePost.seoDescription || activePost.excerpt);
+      updateMeta('keywords', activePost.keywords.join(', '));
+      updateMeta('author', activePost.author);
+
+      // 3. Open Graph (Facebook/LinkedIn)
+      updateMeta('og:title', activePost.seoTitle || activePost.title, 'property');
+      updateMeta('og:description', activePost.seoDescription || activePost.excerpt, 'property');
+      updateMeta('og:image', activePost.image, 'property');
+      updateMeta('og:url', `${SITE_URL}/blog/${activePost.slug}`, 'property');
+      updateMeta('og:type', 'article', 'property');
+
+      // 4. Schema.org (JSON-LD)
+      const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": activePost.seoTitle || activePost.title,
+        "image": [activePost.image],
+        "datePublished": activePost.dateIso,
+        "dateModified": activePost.dateIso, // In real app, separate field
+        "author": [{
+            "@type": "Person",
+            "name": activePost.author,
+            "url": SITE_URL
+        }],
+        "publisher": {
+           "@type": "Organization",
+           "name": "OKR.digital",
+           "logo": {
+             "@type": "ImageObject",
+             "url": `${SITE_URL}/logo.png` // Placeholder
+           }
+        },
+        "description": activePost.seoDescription || activePost.excerpt,
+        "mainEntityOfPage": {
+           "@type": "WebPage",
+           "@id": `${SITE_URL}/blog/${activePost.slug}`
+        }
+      };
+      updateJsonLd(schemaData);
+
+    } else {
+      // RESET TO DEFAULTS when back in list view
+      document.title = DEFAULT_TITLE;
+      updateMeta('description', DEFAULT_DESC);
+      updateMeta('keywords', 'Growth Marketing, SaaS Marketing, Performance Marketing, OKR Digital');
+      updateMeta('og:title', DEFAULT_TITLE, 'property');
+      updateMeta('og:description', DEFAULT_DESC, 'property');
+      updateMeta('og:image', 'https://okr-digital.at/og-image.jpg', 'property'); // Fallback image
+      updateMeta('og:url', SITE_URL, 'property');
+      updateMeta('og:type', 'website', 'property');
+      removeJsonLd();
+    }
+
+    // Cleanup when component unmounts (e.g. navigating to Contact via App.tsx)
+    return () => {
+      document.title = DEFAULT_TITLE;
+      // We don't necessarily reset metas here to avoid flickering if switching views fast, 
+      // but standard practice is to let the next view handle its own SEO or revert to default.
+    };
+  }, [activePost]);
+
+
   // VIEW: SINGLE POST
   if (activePost) {
     return (
@@ -134,7 +260,7 @@ const Blog: React.FC<BlogProps> = ({ onBack }) => {
         exit={{ opacity: 0 }}
         className="min-h-screen bg-white pt-32 pb-24"
       >
-        {/* Progress Bar (Optional visual flair) */}
+        {/* Progress Bar */}
         <div className="fixed top-0 left-0 h-1 bg-brand-primary z-50 w-full origin-left transform scale-x-0 animate-[progress_linear_auto]" />
 
         <div className="container mx-auto px-6 max-w-3xl">
@@ -151,43 +277,45 @@ const Blog: React.FC<BlogProps> = ({ onBack }) => {
           </button>
 
           {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-4 text-sm text-brand-primary font-bold uppercase tracking-wider mb-4">
-              <span className="bg-blue-50 px-3 py-1 rounded-full">{activePost.category}</span>
+          <article>
+            <div className="mb-8">
+              <div className="flex items-center gap-4 text-sm text-brand-primary font-bold uppercase tracking-wider mb-4">
+                <span className="bg-blue-50 px-3 py-1 rounded-full">{activePost.category}</span>
+              </div>
+              <h1 className="text-3xl md:text-5xl font-heading font-extrabold text-brand-navy mb-6 leading-tight">
+                {activePost.title}
+              </h1>
+              
+              <div className="flex items-center gap-6 text-brand-gray text-sm border-b border-slate-100 pb-8">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <time dateTime={activePost.dateIso}>{activePost.date}</time>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  {activePost.readTime} Lesezeit
+                </div>
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  {activePost.author}
+                </div>
+              </div>
             </div>
-            <h1 className="text-3xl md:text-5xl font-heading font-extrabold text-brand-navy mb-6 leading-tight">
-              {activePost.title}
-            </h1>
-            
-            <div className="flex items-center gap-6 text-brand-gray text-sm border-b border-slate-100 pb-8">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                {activePost.date}
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                {activePost.readTime} Lesezeit
-              </div>
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Oliver
-              </div>
+
+            {/* Featured Image */}
+            <div className="rounded-2xl overflow-hidden mb-12 shadow-xl aspect-video relative">
+              <img 
+                src={activePost.image} 
+                alt={activePost.title}
+                className="w-full h-full object-cover"
+              />
             </div>
-          </div>
 
-          {/* Featured Image */}
-          <div className="rounded-2xl overflow-hidden mb-12 shadow-xl aspect-video relative">
-            <img 
-              src={activePost.image} 
-              alt={activePost.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* Content */}
-          <div className="prose prose-lg prose-slate max-w-none text-brand-gray leading-relaxed">
-            {activePost.content}
-          </div>
+            {/* Content */}
+            <div className="prose prose-lg prose-slate max-w-none text-brand-gray leading-relaxed">
+              {activePost.content}
+            </div>
+          </article>
 
           {/* CTA Footer in Article */}
           <div className="mt-16 p-8 bg-brand-navy rounded-2xl text-white text-center">
