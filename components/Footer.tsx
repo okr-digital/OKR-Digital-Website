@@ -6,6 +6,11 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const handleNav = (e: React.MouseEvent, view: string) => {
+    e.preventDefault();
+    onNavigate(view);
+  };
+
   return (
     <footer className="bg-slate-50 py-12 border-t border-slate-200 text-brand-navy">
       <div className="container mx-auto px-6">
@@ -18,7 +23,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           <div className="flex gap-6">
              <a 
-               href="#" 
+               href="https://linkedin.com" 
                className="text-brand-gray hover:text-brand-primary transition-colors" 
                aria-label="Besuche OKR Digital auf LinkedIn"
                target="_blank"
@@ -35,25 +40,28 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
              </a>
           </div>
 
-          <div className="flex gap-6 text-sm text-brand-gray">
-             <button 
-              onClick={() => onNavigate('blog')} 
-              className="hover:text-brand-navy transition-colors"
+          <div className="flex gap-6 text-sm text-brand-gray font-medium">
+             <a 
+              href="#blog"
+              onClick={(e) => handleNav(e, 'blog')} 
+              className="hover:text-brand-primary hover:underline transition-all"
             >
               Blog
-            </button>
-            <button 
-              onClick={() => onNavigate('impressum')} 
-              className="hover:text-brand-navy transition-colors"
+            </a>
+            <a 
+              href="#impressum"
+              onClick={(e) => handleNav(e, 'impressum')} 
+              className="hover:text-brand-primary hover:underline transition-all"
             >
               Impressum
-            </button>
-            <button 
-              onClick={() => onNavigate('datenschutz')}
-              className="hover:text-brand-navy transition-colors"
+            </a>
+            <a 
+              href="#datenschutz"
+              onClick={(e) => handleNav(e, 'datenschutz')}
+              className="hover:text-brand-primary hover:underline transition-all"
             >
               Datenschutz
-            </button>
+            </a>
           </div>
         </div>
         
