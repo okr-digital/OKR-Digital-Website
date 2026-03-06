@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import './index.css';
 
 // Suppress benign ResizeObserver errors often caused by extensions or third-party libraries (like HubSpot or Framer Motion)
 // These errors do not affect functionality but can clutter the console.
